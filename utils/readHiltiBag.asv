@@ -1,0 +1,30 @@
+function scans = readHiltiBag(bagPath, topic)
+
+arguments
+    bagPath (1,:) char
+    topic   (1,:) char = "/hesai/pandar"
+end
+
+% --- choose reader automatically ---------------------------------------
+[~,~,ext] = fileparts(bagPath);
+if ext == ".bag"
+    bag = rosbagreader(bagPath);   % ROS 1
+else
+    bag = ros2bagreader(bagPath);  % ROS 2 (.db3/.mcap)
+end
+
+sel  = select(bag,"Topic",topic);
+msgs = readMessages(sel,"DataFormat","struct");
+assert(~isempty(msgs),"Topic not found or empty bag");
+
+% --- sensor model (40-ring Pandar default) -----------------------------
+
+lp    = lidarParameters(40,360,'VerticalLimits',[-16 15]);
+
+% --- convert all scans --------------------------------------------------
+n = numel(msgs); scans = cell(1,n);
+parfor k = 1:n
+    xyz      = rosReadXYZ(msgs{k});
+    scans{k} = pcorganize(pointCloud(xyz),lp);
+end
+end
