@@ -1,3 +1,27 @@
+# Lidar Hilti Benchmark
+
+This repository provides a simple benchmarking harness for LiDAR odometry algorithms on Hilti datasets. It ships with a lightweight LOAM-style baseline and a minimal LeGO-LOAM style variant.
+
+## Algorithms
+
+- `algorithms/loam/` — baseline LOAM-like registration using planar residuals
+- `algorithms/legoloam/` — minimal LeGO-LOAM style pipeline with ground segmentation
+
+## Usage
+
+Run an algorithm on a ROS bag:
+
+```matlab
+% LOAM
+traj = algorithms.loam.pipeline('data/site3_handheld_1.bag', '/hesai/pandar');
+
+% LeGO-LOAM
+traj = algorithms.legoloam.pipeline('data/site3_handheld_1.bag', '/hesai/pandar');
+```
+
+Results are saved as `.tum` in `results/`.
+
+---
 # LOAM Code Checklist
 
 ## 1 · Folder & Naming
