@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  static-checks:
+    name: Static repository checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Show MATLAB/Octave availability
+        run: |
+          which matlab || true
+          which octave || true
+      - name: Validate repo structure
+        run: |
+          test -d algorithms && echo "algorithms/ ok"
+          test -d utils && echo "utils/ ok"
+          test -d tests && echo "tests/ ok"
+          test -f README.md && echo "README.md ok"
+      - name: List MATLAB files
+        run: |
+          shopt -s globstar || true
+          ls -1 **/*.m | sed 's/^/Matlab: /' || true
+
+  matlab-tests:
+    name: MATLAB unit tests
+    if: ${{ secrets.MLM_LICENSE_FILE != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+      - name: Run tests
+        uses: matlab-actions/run-tests@v2
+        with:
+          source-folder: .
+          select-by-folder: tests
+          test-results-junit: test-results/results.xml
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: matlab-test-results
+          path: test-results
+
+

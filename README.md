@@ -2,6 +2,9 @@
 
 This repository provides a simple benchmarking harness for LiDAR odometry algorithms on Hilti datasets. It ships with a lightweight LOAM-style baseline and a minimal LeGO-LOAM style variant.
 
+![CI](https://github.com/<your-org>/Lidar_Hillti_benchmark/actions/workflows/ci.yml/badge.svg)
+
+
 ## Algorithms
 
 - `algorithms/loam/` — baseline LOAM-like registration using planar residuals
@@ -20,6 +23,13 @@ traj = algorithms.legoloam.pipeline('data/site3_handheld_1.bag', '/hesai/pandar'
 ```
 
 Results are saved as `.tum` in `results/`.
+
+## References
+
+- LOAM: Zhang, J., and Singh, S. “LOAM: Lidar Odometry and Mapping in Real-time.” RSS 2014. GitHub: [`https://github.com/laboshinl/loam_velodyne`](https://github.com/laboshinl/loam_velodyne)
+- LeGO-LOAM: Shan, T., and Englot, B. “LeGO-LOAM: Lightweight and Ground-Optimized Lidar Odometry and Mapping on Variable Terrain.” IROS 2018. GitHub: [`https://github.com/RobustFieldAutonomyLab/LeGO-LOAM`](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM)
+
+See also Hilti SLAM datasets.
 
 ---
 # LOAM Code Checklist
